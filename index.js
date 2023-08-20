@@ -1,10 +1,11 @@
-// ///////////////////////////////////
 const express = require("express");
 const axios = require("axios");
+const cors = require("cors"); // Import the cors package
 
 const app = express();
 
 app.use(express.json());
+app.use(cors()); //
 
 async function token(apiKey, res) {
   const config = { headers: { "Api-key": apiKey } };
@@ -38,10 +39,30 @@ app.post("/token", (req, res) => {
   token(headers["api-key"], res); // Use lowercase "api-key"
 });
 
-// let fetchList(())
+async function fetchList(req, res) {
+  console.log("req.body", req.body);
+  let url = "https://dev-test.cimet.io/plan-list";
 
-// app.post("/list", (req, res) => {});
+  try {
+    const response = await axios.post(url, req.body, {
+      headers: {
+        "Api-key": req.headers["api-key"],
+        "Auth-token": req.headers["auth-token"],
+      },
+    });
 
-app.listen(3000, () => {
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching list:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+app.post("/list", (req, res) => {
+  console.log("list running ", req.headers);
+  fetchList(req, res);
+});
+
+app.listen(3003, () => {
   console.log("Express server initialized");
 });
