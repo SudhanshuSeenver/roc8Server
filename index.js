@@ -5,7 +5,12 @@ const cors = require("cors"); // Import the cors package
 const app = express();
 
 app.use(express.json());
-app.use(cors()); //
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 async function token(apiKey, res) {
   const config = { headers: { "Api-key": apiKey } };
