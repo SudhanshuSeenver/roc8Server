@@ -3,6 +3,8 @@ const axios = require("axios");
 
 const app = express();
 
+app.use(express.json());
+
 async function token(apiKey, res) {
   const config = { headers: { "Api-key": apiKey } };
   const token = await axios.post(
